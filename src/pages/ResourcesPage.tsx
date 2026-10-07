@@ -1,14 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 import { getErrorMessage } from '../api/ApiError'
 import type { ListResourcesParams, Resource, ResourceStatus, SortOrder } from '../api/types'
 import { ErrorState, LoadingState } from '../components/PageState'
+import { DangerButton, LinkButton } from '../components/LinkButton'
 import { StatusBadge } from '../components/StatusBadge'
-import { Banner, Muted, Page, PageHeader, Row, Stack, Subtitle, Title } from '../components/ui'
-import { Button, Card, Drawer, Input, Select } from '../design-system'
+import { Actions, Banner, Muted, Page, PageHeader, Row, Stack, Subtitle, Title } from '../components/ui'
+import { SelectField } from '../components/SelectField'
+import { Button, Card, Drawer, Input } from '../design-system'
 import {
   useCreateResource,
   useDeleteResource,
@@ -63,17 +65,19 @@ export function ResourcesPage() {
   const [isCreateOpen, setCreateOpen] = useState(false)
   const [toDelete, setToDelete] = useState<Resource | null>(null)
 
-  // Debounce the name filter; the input is uncontrolled by the URL while typing.
+  // Debounce the name filter: the input stays responsive while the URL (and
+  // therefore the request) updates 300 ms after the user stops typing.
   const [search, setSearch] = useState(params.name ?? '')
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (search !== (params.name ?? '')) {
-        update({ name: search.trim() || undefined, page: undefined })
-      }
-    }, 300)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search])
+  const searchTimer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(searchTimer.current), [])
+  const onSearchChange = (value: string) => {
+    setSearch(value)
+    window.clearTimeout(searchTimer.current)
+    searchTimer.current = window.setTimeout(
+      () => update({ name: value.trim() || undefined, page: undefined }),
+      300,
+    )
+  }
 
   const pagination = data?.pagination
 
@@ -94,9 +98,9 @@ export function ResourcesPage() {
           aria-label="Search by name"
           placeholder="Search by name"
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={(event) => onSearchChange(event.target.value)}
         />
-        <Select
+        <SelectField
           aria-label="Filter by status"
           options={STATUS_OPTIONS}
           value={params.status ?? ''}
@@ -104,7 +108,7 @@ export function ResourcesPage() {
             update({ status: event.target.value || undefined, page: undefined })
           }
         />
-        <Select
+        <SelectField
           aria-label="Sort order"
           options={SORT_OPTIONS}
           value={params.sortOrder}
@@ -205,13 +209,15 @@ function ResourceRow({
             created {new Date(resource.createdAt).toLocaleDateString()}
           </Muted>
         </Stack>
-        <Row>
-          <Link to={`/resources/${id}`}>Open</Link>
-          <Link to={`/resources/${id}/details`}>Details</Link>
-          <Button type="button" size="small" variant="ghost" onClick={onDelete}>
+        <Actions>
+          <LinkButton $variant="primary" to={`/resources/${id}`}>
+            Open
+          </LinkButton>
+          <LinkButton to={`/resources/${id}/details`}>Details</LinkButton>
+          <DangerButton type="button" size="small" variant="ghost" onClick={onDelete}>
             Delete
-          </Button>
-        </Row>
+          </DangerButton>
+        </Actions>
       </PageHeader>
     </Card>
   )

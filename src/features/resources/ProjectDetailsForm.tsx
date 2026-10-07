@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { getErrorMessage } from '../../api/ApiError'
 import type { Resource } from '../../api/types'
 import { Banner, Row, Stack } from '../../components/ui'
-import { Button, CheckboxGroup, Input, Select } from '../../design-system'
+import { SelectField } from '../../components/SelectField'
+import { Button, CheckboxGroup, Input } from '../../design-system'
 import { useEditBuffer } from './editBuffer'
 import { useUpdateProjectDetails } from './queries'
 import { isCompleted } from './rules'
@@ -77,7 +78,7 @@ export function ProjectDetailsForm({ resource }: { resource: Resource }) {
           error={errors.budget?.message}
           {...register('budget')}
         />
-        <Select
+        <SelectField
           label="Category"
           options={CATEGORY_OPTIONS}
           error={errors.category?.message}

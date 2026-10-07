@@ -32,7 +32,15 @@ export const useResource = (id: string) =>
 const useSyncResource = () => {
   const queryClient = useQueryClient()
   return (resource: Resource) => {
-    queryClient.setQueryData(resourceKeys.detail(String(resource.resourceId)), resource)
+    queryClient.setQueryData(
+      resourceKeys.detail(String(resource.resourceId)),
+      resource,
+    )
+    // A page opened via the Mongo _id caches the resource under another key;
+    // refresh every detail query so no view keeps showing stale data.
+    void queryClient.invalidateQueries({
+      queryKey: [...resourceKeys.all, 'detail'],
+    })
     void queryClient.invalidateQueries({
       queryKey: [...resourceKeys.all, 'list'],
     })

@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getErrorMessage } from '../api/ApiError'
 import type { Resource } from '../api/types'
 import { ErrorState, LoadingState } from '../components/PageState'
+import { LinkButton } from '../components/LinkButton'
 import { StatusBadge } from '../components/StatusBadge'
 import {
   Banner,
@@ -74,7 +75,7 @@ function Overview({ resource }: { resource: Resource }) {
         </Stack>
         <Row>
           <StatusBadge status={resource.status} />
-          <Link to={`/resources/${id}/details`}>View details</Link>
+          <LinkButton to={`/resources/${id}/details`}>View details</LinkButton>
         </Row>
       </PageHeader>
 
@@ -200,7 +201,7 @@ function ModuleCard({
             {actionLabel}
           </Button>
         ) : (
-          <Link to={to}>{actionLabel}</Link>
+          <LinkButton to={to}>{actionLabel}</LinkButton>
         )}
       </PageHeader>
     </Card>

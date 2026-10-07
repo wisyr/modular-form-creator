@@ -37,6 +37,11 @@ export const Row = styled.div`
   gap: ${({ theme }) => theme.spacing.sm};
 `
 
+/** Row of related actions with comfortable spacing between buttons. */
+export const Actions = styled(Row)`
+  gap: ${({ theme }) => theme.spacing.md};
+`
+
 export const Stack = styled.div`
   display: flex;
   flex-direction: column;

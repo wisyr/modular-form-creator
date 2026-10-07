@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { getErrorMessage } from '../../api/ApiError'
 import type { Resource } from '../../api/types'
 import { Banner, Row, Stack } from '../../components/ui'
-import { Button, Input, Select } from '../../design-system'
+import { SelectField } from '../../components/SelectField'
+import { Button, Input } from '../../design-system'
 import { useEditBuffer } from './editBuffer'
 import { useUpdateBasicInfo } from './queries'
 import { isCompleted } from './rules'
@@ -87,7 +88,7 @@ export function BasicInfoForm({ resource }: { resource: Resource }) {
           error={errors.description?.message}
           {...register('description')}
         />
-        <Select
+        <SelectField
           label="Priority"
           options={PRIORITY_OPTIONS}
           error={errors.priority?.message}
