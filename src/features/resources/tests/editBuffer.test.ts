@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { completeBasicInfo, completeProjectDetails } from '../../../test/fixtures'
+import { completeBasicInfo, completeProjectDetails } from '../../../tests/fixtures'
 import { useEditBuffer } from '../editBuffer'
 
 describe('edit buffer', () => {

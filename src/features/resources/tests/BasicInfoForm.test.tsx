@@ -6,8 +6,8 @@ import {
   completeBasicInfo,
   makeCompletedResource,
   makeResource,
-} from '../../../test/fixtures'
-import { renderRoute } from '../../../test/renderWithProviders'
+} from '../../../tests/fixtures'
+import { renderRoute } from '../../../tests/renderWithProviders'
 import { BasicInfoForm } from '../BasicInfoForm'
 import { useEditBuffer } from '../editBuffer'
 

@@ -6,7 +6,7 @@ import {
   emptyProjectDetails,
   makeCompletedResource,
   makeResource,
-} from '../../../test/fixtures'
+} from '../../../tests/fixtures'
 import {
   canEditProjectDetails,
   canProvision,

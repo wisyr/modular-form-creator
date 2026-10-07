@@ -5,8 +5,8 @@ import * as api from '../../../api/resources'
 import {
   completeProjectDetails,
   makeCompletedResource,
-} from '../../../test/fixtures'
-import { renderRoute } from '../../../test/renderWithProviders'
+} from '../../../tests/fixtures'
+import { renderRoute } from '../../../tests/renderWithProviders'
 import { useEditBuffer } from '../editBuffer'
 import { ProjectDetailsForm } from '../ProjectDetailsForm'
 

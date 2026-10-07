@@ -3,13 +3,13 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as api from '../../api/resources'
 import { useEditBuffer } from '../../features/resources/editBuffer'
-import { renderRoute } from '../../test/renderWithProviders'
+import { renderRoute } from '../../tests/renderWithProviders'
 import {
   completeBasicInfo,
   completeProjectDetails,
   makeCompletedResource,
   makeResource,
-} from '../../test/fixtures'
+} from '../../tests/fixtures'
 import { ResourceOverviewPage } from '../ResourceOverviewPage'
 
 vi.mock('../../api/resources')
