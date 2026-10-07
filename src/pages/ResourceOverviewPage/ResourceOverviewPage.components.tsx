@@ -181,11 +181,18 @@ export const ModuleCard = ({
           {lockedReason ? <Muted>{lockedReason}</Muted> : null}
         </TightStack>
         {lockedReason ? (
-          <Button type="button" variant="secondary" state="locked">
+          <Button
+            type="button"
+            variant="secondary"
+            state="locked"
+            aria-label={`${actionLabel} ${title} (locked)`}
+          >
             {actionLabel}
           </Button>
         ) : (
-          <LinkButton to={to}>{actionLabel}</LinkButton>
+          <LinkButton to={to} aria-label={`${actionLabel} ${title}`}>
+            {actionLabel}
+          </LinkButton>
         )}
       </PageHeader>
     </Card>

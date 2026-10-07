@@ -1,7 +1,14 @@
 import styled from 'styled-components'
 
+/** Target of the skip link; also receives focus after each route change. */
+export const MAIN_CONTENT_ID = 'main-content'
+
 /** Small layout primitives shared by pages (built on design-system tokens). */
-export const Page = styled.main`
+export const Page = styled.main.attrs({ id: MAIN_CONTENT_ID, tabIndex: -1 })`
+  &:focus {
+    outline: none;
+  }
+
   max-width: 960px;
   margin: 0 auto;
   padding: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.md}`};
@@ -105,5 +112,22 @@ export const DefinitionList = styled.dl`
     margin: 0;
     color: ${({ theme }) => theme.colors.inkStrong};
     overflow-wrap: anywhere;
+  }
+`
+
+/** Visually hidden until focused; lets keyboard users jump past navigation. */
+export const SkipLink = styled.a`
+  position: absolute;
+  left: ${({ theme }) => theme.spacing.md};
+  top: -100px;
+  z-index: 100;
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  background: ${({ theme }) => theme.colors.primary};
+  color: #fff;
+  font-weight: 600;
+
+  &:focus {
+    top: ${({ theme }) => theme.spacing.md};
   }
 `

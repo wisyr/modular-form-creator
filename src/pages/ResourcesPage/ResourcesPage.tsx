@@ -14,9 +14,10 @@ import {
 } from '../../components/ui'
 import { SelectField } from '../../components/SelectField'
 import { Button, Drawer, Input } from '../../design-system'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useResources } from '../../features/resources/queries'
 import { SORT_OPTIONS, STATUS_OPTIONS } from './ResourcesPage.constants'
-import { useListParams } from './ResourcesPage.hooks'
+import { useListParams, useReturnFocus } from './ResourcesPage.hooks'
 import {
   CreateForm,
   DeleteConfirm,
@@ -24,10 +25,29 @@ import {
 } from './ResourcesPage.components'
 
 export const ResourcesPage = () => {
+  useDocumentTitle('Resources')
   const { params, update } = useListParams()
   const { data, error, isPending, isFetching, refetch } = useResources(params)
   const [isCreateOpen, setCreateOpen] = useState(false)
   const [toDelete, setToDelete] = useState<Resource | null>(null)
+  const returnFocus = useReturnFocus()
+
+  const openCreate = () => {
+    returnFocus.remember()
+    setCreateOpen(true)
+  }
+  const closeCreate = () => {
+    setCreateOpen(false)
+    returnFocus.restore()
+  }
+  const openDelete = (resource: Resource) => {
+    returnFocus.remember()
+    setToDelete(resource)
+  }
+  const closeDelete = () => {
+    setToDelete(null)
+    returnFocus.restore()
+  }
 
   // Debounce the name filter: the input stays responsive while the URL (and
   // therefore the request) updates 300 ms after the user stops typing.
@@ -54,7 +74,7 @@ export const ResourcesPage = () => {
           <Title>Resources</Title>
           <Subtitle>Create resources and track their module progress.</Subtitle>
         </TightStack>
-        <Button type="button" onClick={() => setCreateOpen(true)}>
+        <Button type="button" onClick={openCreate}>
           Create resource
         </Button>
       </PageHeader>
@@ -102,7 +122,7 @@ export const ResourcesPage = () => {
         <ResourceRow
           key={resource._id}
           resource={resource}
-          onDelete={() => setToDelete(resource)}
+          onDelete={() => openDelete(resource)}
         />
       ))}
 
@@ -134,18 +154,18 @@ export const ResourcesPage = () => {
       <Drawer
         title="Create resource"
         isOpen={isCreateOpen}
-        onClose={() => setCreateOpen(false)}
+        onClose={closeCreate}
       >
-        {isCreateOpen ? <CreateForm onDone={() => setCreateOpen(false)} /> : null}
+        {isCreateOpen ? <CreateForm onDone={closeCreate} /> : null}
       </Drawer>
 
       <Drawer
         title="Delete resource"
         isOpen={toDelete !== null}
-        onClose={() => setToDelete(null)}
+        onClose={closeDelete}
       >
         {toDelete ? (
-          <DeleteConfirm resource={toDelete} onDone={() => setToDelete(null)} />
+          <DeleteConfirm resource={toDelete} onDone={closeDelete} />
         ) : null}
       </Drawer>
     </Page>

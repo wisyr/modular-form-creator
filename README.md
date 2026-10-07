@@ -42,6 +42,8 @@ Requires Node >= 22.13 (`.nvmrc` pins 22). Don't run the Docker frontend and
 | `npm run build` | Type-check (`tsc -b`) and production build |
 | `npm run lint` | ESLint |
 | `npm test` | Unit and component tests (Vitest, jsdom) |
+| `npm run e2e` | Playwright end-to-end test against the running stack (see below) |
+| `npm run e2e:typecheck` | Type-check the e2e sources |
 | `npm run gen:api` | Re-export the backend OpenAPI spec and regenerate `src/api/schema.d.ts` |
 | `npm run storybook` | Design system stories |
 
@@ -128,6 +130,48 @@ module forms. Test files are named `*.tests.ts(x)`. They cover: Project Details 
 provisioning disabled until both modules are complete, completed-resource edits
 never triggering `PATCH`, a single full `PUT` on submit, and the resource name
 staying locked.
+
+### End-to-end test
+
+`e2e/resource-lifecycle.spec.ts` drives the real app and backend through one
+journey: unknown route (404), create (with validation), Project Details locked,
+complete both modules, provision, edit a completed resource (no request is
+sent), then submit and assert exactly one `PUT`. It deletes the resource it
+created.
+
+```bash
+# 1. start the stack (frontend :5173, backend :5001)
+docker compose up -d --build
+
+# 2. first time only: download the browser
+npx playwright install chromium
+
+# 3. run the test (set E2E_BASE_URL to target another URL)
+npm run e2e
+```
+
+### CI
+
+`.github/workflows/ci.yml` runs on every push to `main` and on pull requests:
+lint, type-check + build, unit tests, then the Playwright test against
+`docker compose up`. The Playwright report is uploaded when the e2e job fails.
+
+## Accessibility and error handling
+
+- **Keyboard / screen readers:** a skip link, focus moved to the page content
+  after each route change, a descriptive document title per route, a visible
+  `:focus-visible` ring, reduced-motion support, and row actions whose
+  accessible names include the resource (for example "Delete Alpha").
+- **Dialogs:** the delete confirmation focuses its safe action (Cancel) and
+  both drawers return focus to the control that opened them.
+- **Forms:** labels, `aria-invalid` and `aria-describedby` come from the design
+  system inputs; error banners use `role="alert"`, loading uses `role="status"`.
+- **Errors:** every route sits under a React Router `errorElement`
+  (`RouteErrorPage`), so a render error shows a recovery page instead of a blank
+  screen, while unknown URLs get the 404 page.
+- Not changed because the design system is off limits: the drawer has no focus
+  trap, its close button has no accessible name, and checkbox groups are not
+  wrapped in a `fieldset`.
 
 ## Known limits
 

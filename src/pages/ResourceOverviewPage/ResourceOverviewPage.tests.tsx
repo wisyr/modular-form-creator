@@ -116,7 +116,7 @@ describe('ResourceOverviewPage', () => {
 
   it('shows a not-found message when the resource does not exist', async () => {
     const { ApiError } = await vi.importActual<typeof import('../../api/ApiError')>(
-      '../api/ApiError',
+      '../../api/ApiError',
     )
     vi.mocked(api.getResource).mockRejectedValue(
       new ApiError(404, 'Resource not found'),

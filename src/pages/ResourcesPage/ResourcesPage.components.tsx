@@ -48,11 +48,26 @@ export const ResourceRow = ({
           </Muted>
         </TightStack>
         <Actions>
-          <LinkButton $variant="primary" to={`/resources/${id}`}>
+          <LinkButton
+            $variant="primary"
+            to={`/resources/${id}`}
+            aria-label={`Open ${resource.name}`}
+          >
             Open
           </LinkButton>
-          <LinkButton to={`/resources/${id}/details`}>Details</LinkButton>
-          <DangerButton type="button" size="small" variant="ghost" onClick={onDelete}>
+          <LinkButton
+            to={`/resources/${id}/details`}
+            aria-label={`View details of ${resource.name}`}
+          >
+            Details
+          </LinkButton>
+          <DangerButton
+            type="button"
+            size="small"
+            variant="ghost"
+            onClick={onDelete}
+            aria-label={`Delete ${resource.name}`}
+          >
             Delete
           </DangerButton>
         </Actions>
@@ -133,7 +148,7 @@ export const DeleteConfirm = ({
         >
           {remove.isPending ? 'Deleting…' : 'Delete'}
         </Button>
-        <Button type="button" variant="ghost" onClick={onDone}>
+        <Button type="button" variant="ghost" onClick={onDone} autoFocus>
           Cancel
         </Button>
       </Row>

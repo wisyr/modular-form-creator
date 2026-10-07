@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { Link, useParams } from 'react-router-dom'
 import { ErrorState, LoadingState } from '../../components/PageState'
 import { Page } from '../../components/ui'
@@ -7,6 +8,7 @@ import { Overview } from './ResourceOverviewPage.components'
 export const ResourceOverviewPage = () => {
   const { resourceId = '' } = useParams()
   const { data: resource, error, isPending, refetch } = useResource(resourceId)
+  useDocumentTitle(resource?.name)
 
   return (
     <Page>

@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { Link, useParams } from 'react-router-dom'
 import { ErrorState, LoadingState } from '../../components/PageState'
 import { Banner, Page, PageHeader, Title } from '../../components/ui'
@@ -8,6 +9,9 @@ import { canEditProjectDetails } from '../../features/resources/rules'
 export const ProjectDetailsPage = () => {
   const { resourceId = '' } = useParams()
   const { data: resource, error, isPending, refetch } = useResource(resourceId)
+  useDocumentTitle(
+    resource ? `Project Details · ${resource.name}` : 'Project Details',
+  )
 
   return (
     <Page>

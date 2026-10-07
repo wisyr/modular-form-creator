@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { ListResourcesParams, ResourceStatus } from '../../api/types'
 import { PAGE_SIZE } from './ResourcesPage.constants'
@@ -28,4 +29,24 @@ export const useListParams = () => {
     })
 
   return { params, update }
+}
+
+/**
+ * Drawers move focus into themselves when they open; this remembers the control
+ * that opened one and hands focus back when it closes, so keyboard users do not
+ * lose their place in the list.
+ */
+export const useReturnFocus = () => {
+  const trigger = useRef<HTMLElement | null>(null)
+
+  const remember = () => {
+    trigger.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
+  }
+  const restore = () => {
+    trigger.current?.focus()
+    trigger.current = null
+  }
+
+  return { remember, restore }
 }

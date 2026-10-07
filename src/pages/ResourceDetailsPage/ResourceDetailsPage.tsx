@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { Link, useParams } from 'react-router-dom'
 import { ErrorState, LoadingState } from '../../components/PageState'
 import { Page } from '../../components/ui'
@@ -7,6 +8,7 @@ import { Details } from './ResourceDetailsPage.components'
 export const ResourceDetailsPage = () => {
   const { resourceId = '' } = useParams()
   const { data: resource, error, isPending, refetch } = useResource(resourceId)
+  useDocumentTitle(resource ? `Details · ${resource.name}` : 'Details')
 
   return (
     <Page>
