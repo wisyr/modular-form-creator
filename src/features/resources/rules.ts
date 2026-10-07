@@ -1,14 +1,30 @@
 import type { BasicInfo, ProjectDetails, Resource } from '../../api/types'
-import { basicInfoSchema, projectDetailsSchema } from './schemas'
 
 /** Business rules in one place; pages and hooks only ask these functions. */
 
+/**
+ * "Complete" mirrors the backend exactly (resource.service.ts): a module is
+ * complete when all of its fields are filled in. Format validation belongs to
+ * the forms (see schemas.ts); the backend rejects invalid values on write.
+ */
 export const isBasicInfoComplete = (basicInfo: BasicInfo): boolean =>
-  basicInfoSchema.safeParse(basicInfo).success
+  Boolean(
+    basicInfo.resourceName &&
+      basicInfo.owner &&
+      basicInfo.email &&
+      basicInfo.description &&
+      basicInfo.priority,
+  )
 
 export const isProjectDetailsComplete = (
   projectDetails: ProjectDetails,
-): boolean => projectDetailsSchema.safeParse(projectDetails).success
+): boolean =>
+  Boolean(
+    projectDetails.projectName &&
+      projectDetails.budget &&
+      projectDetails.category &&
+      projectDetails.options.length > 0,
+  )
 
 export const isCompleted = (resource: Resource): boolean =>
   resource.status === 'completed'

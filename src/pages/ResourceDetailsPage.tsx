@@ -10,8 +10,11 @@ import {
   Subtitle,
   Title,
 } from '../components/ui'
-import { Card } from '../design-system'
-import { useHasBufferedEdits } from '../features/resources/editBuffer'
+import { Badge, Card } from '../design-system'
+import {
+  useEffectiveResource,
+  useResourceBuffer,
+} from '../features/resources/editBuffer'
 import { useResource } from '../features/resources/queries'
 import { completedModuleCount } from '../features/resources/rules'
 
@@ -31,8 +34,10 @@ export function ResourceDetailsPage() {
   )
 }
 
-function Details({ resource }: { resource: Resource }) {
-  const hasUnsaved = useHasBufferedEdits(String(resource.resourceId))
+function Details({ resource: savedResource }: { resource: Resource }) {
+  // Show what the user is about to save: server data plus buffered edits.
+  const resource = useEffectiveResource(savedResource)
+  const buffer = useResourceBuffer(String(savedResource.resourceId))
   const { basicInfo, projectDetails } = resource
 
   return (
@@ -48,15 +53,18 @@ function Details({ resource }: { resource: Resource }) {
         <StatusBadge status={resource.status} />
       </PageHeader>
 
-      {hasUnsaved ? (
+      {buffer ? (
         <Banner $tone="warning">
-          This page shows saved data. You have unsaved changes that are not
-          included here.
+          This page includes your unsaved changes. Submit them from the
+          overview page to save them.
         </Banner>
       ) : null}
 
       <Card variant="outline">
-        <h2 style={{ marginTop: 0 }}>Basic Info</h2>
+        <h2 style={{ marginTop: 0 }}>
+          Basic Info{' '}
+          {buffer?.basicInfo ? <Badge variant="warning">Unsaved changes</Badge> : null}
+        </h2>
         <DefinitionList>
           <dt>Resource name</dt>
           <dd>{orDash(basicInfo.resourceName)}</dd>
@@ -72,7 +80,12 @@ function Details({ resource }: { resource: Resource }) {
       </Card>
 
       <Card variant="outline">
-        <h2 style={{ marginTop: 0 }}>Project Details</h2>
+        <h2 style={{ marginTop: 0 }}>
+          Project Details{' '}
+          {buffer?.projectDetails ? (
+            <Badge variant="warning">Unsaved changes</Badge>
+          ) : null}
+        </h2>
         <DefinitionList>
           <dt>Project name</dt>
           <dd>{orDash(projectDetails.projectName)}</dd>

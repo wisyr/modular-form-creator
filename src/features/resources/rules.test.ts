@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   completeBasicInfo,
   completeProjectDetails,
+  emptyBasicInfo,
+  emptyProjectDetails,
   makeCompletedResource,
   makeResource,
 } from '../../test/fixtures'
@@ -18,17 +20,22 @@ describe('module completeness', () => {
     expect(isBasicInfoComplete(completeBasicInfo)).toBe(true)
   })
 
-  it('treats Basic Info with a missing or invalid field as incomplete', () => {
+  it('treats Basic Info with any empty field as incomplete', () => {
     expect(isBasicInfoComplete({ ...completeBasicInfo, priority: '' })).toBe(false)
-    expect(isBasicInfoComplete({ ...completeBasicInfo, email: 'nope' })).toBe(false)
-    expect(isBasicInfoComplete({ ...completeBasicInfo, owner: '   ' })).toBe(false)
+    expect(isBasicInfoComplete({ ...completeBasicInfo, email: '' })).toBe(false)
+    expect(isBasicInfoComplete({ ...completeBasicInfo, owner: '' })).toBe(false)
+    expect(isBasicInfoComplete(emptyBasicInfo)).toBe(false)
   })
 
-  it('requires at least one team member for Project Details', () => {
+  it('requires every Project Details field, including a team member', () => {
     expect(isProjectDetailsComplete(completeProjectDetails)).toBe(true)
     expect(
       isProjectDetailsComplete({ ...completeProjectDetails, options: [] }),
     ).toBe(false)
+    expect(
+      isProjectDetailsComplete({ ...completeProjectDetails, budget: '' }),
+    ).toBe(false)
+    expect(isProjectDetailsComplete(emptyProjectDetails)).toBe(false)
   })
 })
 

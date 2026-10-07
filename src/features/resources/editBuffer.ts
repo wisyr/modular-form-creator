@@ -1,5 +1,6 @@
+import { useMemo } from 'react'
 import { create } from 'zustand'
-import type { BasicInfo, ProjectDetails } from '../../api/types'
+import type { BasicInfo, ProjectDetails, Resource } from '../../api/types'
 
 /**
  * Temporary edits for COMPLETED resources, keyed by resource id.
@@ -40,6 +41,24 @@ export const useEditBuffer = create<EditBufferState>()((set) => ({
     }),
 }))
 
-/** True when this resource has unsaved buffered edits. */
-export const useHasBufferedEdits = (id: string): boolean =>
-  useEditBuffer((s) => Boolean(s.buffers[id]))
+/** The resource as the user currently sees it: server data plus any buffered edits. */
+export const applyBuffer = (
+  resource: Resource,
+  buffer: EditBuffer | undefined,
+): Resource =>
+  buffer
+    ? {
+        ...resource,
+        basicInfo: buffer.basicInfo ?? resource.basicInfo,
+        projectDetails: buffer.projectDetails ?? resource.projectDetails,
+      }
+    : resource
+
+export const useResourceBuffer = (id: string): EditBuffer | undefined =>
+  useEditBuffer((s) => s.buffers[id])
+
+/** Server resource merged with its buffered edits (what the Details page shows). */
+export const useEffectiveResource = (resource: Resource): Resource => {
+  const buffer = useResourceBuffer(String(resource.resourceId))
+  return useMemo(() => applyBuffer(resource, buffer), [resource, buffer])
+}
