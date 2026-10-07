@@ -23,19 +23,19 @@ interface EditBufferState {
 export const useEditBuffer = create<EditBufferState>()((set) => ({
   buffers: {},
   setBasicInfo: (id, value) =>
-    set((s) => ({
-      buffers: { ...s.buffers, [id]: { ...s.buffers[id], basicInfo: value } },
+    set((state) => ({
+      buffers: { ...state.buffers, [id]: { ...state.buffers[id], basicInfo: value } },
     })),
   setProjectDetails: (id, value) =>
-    set((s) => ({
+    set((state) => ({
       buffers: {
-        ...s.buffers,
-        [id]: { ...s.buffers[id], projectDetails: value },
+        ...state.buffers,
+        [id]: { ...state.buffers[id], projectDetails: value },
       },
     })),
   discard: (id) =>
-    set((s) => {
-      const rest = { ...s.buffers }
+    set((state) => {
+      const rest = { ...state.buffers }
       delete rest[id]
       return { buffers: rest }
     }),
@@ -55,7 +55,7 @@ export const applyBuffer = (
     : resource
 
 export const useResourceBuffer = (id: string): EditBuffer | undefined =>
-  useEditBuffer((s) => s.buffers[id])
+  useEditBuffer((state) => state.buffers[id])
 
 /** Server resource merged with its buffered edits (what the Details page shows). */
 export const useEffectiveResource = (resource: Resource): Resource => {

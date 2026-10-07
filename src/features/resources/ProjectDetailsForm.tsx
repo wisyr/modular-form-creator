@@ -30,8 +30,8 @@ export const ProjectDetailsForm = ({ resource }: { resource: Resource }) => {
   const id = String(resource.resourceId)
   const navigate = useNavigate()
   const completed = isCompleted(resource)
-  const buffered = useEditBuffer((s) => s.buffers[id]?.projectDetails)
-  const setBuffer = useEditBuffer((s) => s.setProjectDetails)
+  const buffered = useEditBuffer((state) => state.buffers[id]?.projectDetails)
+  const setBuffer = useEditBuffer((state) => state.setProjectDetails)
   const update = useUpdateProjectDetails(id)
 
   const source = buffered ?? resource.projectDetails

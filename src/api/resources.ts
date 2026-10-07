@@ -27,11 +27,11 @@ type ErrorBody = { message?: string; details?: unknown } | undefined
  * Unwraps an openapi-fetch result: returns `data` or throws a typed `ApiError`.
  * openapi-fetch resolves (does not throw) on HTTP errors, so we normalise here.
  */
-const unwrap = <T>(result: {
-  data?: T
+const unwrap = <TData>(result: {
+  data?: TData
   error?: unknown
   response: Response
-}): T => {
+}): TData => {
   if (result.error !== undefined || result.data === undefined) {
     const body = result.error as ErrorBody
     throw new ApiError(

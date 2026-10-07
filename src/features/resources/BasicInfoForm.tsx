@@ -33,8 +33,8 @@ export const BasicInfoForm = ({ resource }: { resource: Resource }) => {
   const id = String(resource.resourceId)
   const navigate = useNavigate()
   const completed = isCompleted(resource)
-  const buffered = useEditBuffer((s) => s.buffers[id]?.basicInfo)
-  const setBuffer = useEditBuffer((s) => s.setBasicInfo)
+  const buffered = useEditBuffer((state) => state.buffers[id]?.basicInfo)
+  const setBuffer = useEditBuffer((state) => state.setBasicInfo)
   const update = useUpdateBasicInfo(id)
 
   const source = buffered ?? resource.basicInfo

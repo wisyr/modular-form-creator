@@ -31,8 +31,8 @@ import {
 export const Overview = ({ resource }: { resource: Resource }) => {
   const id = String(resource.resourceId)
   const completed = isCompleted(resource)
-  const buffer = useEditBuffer((s) => s.buffers[id])
-  const discard = useEditBuffer((s) => s.discard)
+  const buffer = useEditBuffer((state) => state.buffers[id])
+  const discard = useEditBuffer((state) => state.discard)
   const provision = useProvisionResource(id)
   const replace = useReplaceResource(id)
 

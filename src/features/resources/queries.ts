@@ -58,7 +58,7 @@ export const useCreateResource = () => {
 
 export const useDeleteResource = () => {
   const queryClient = useQueryClient()
-  const discard = useEditBuffer((s) => s.discard)
+  const discard = useEditBuffer((state) => state.discard)
   return useMutation({
     mutationFn: (id: string) => api.deleteResource(id),
     onSuccess: (_data, id) => {
@@ -100,7 +100,7 @@ export const useProvisionResource = (id: string) => {
 /** Submits the buffered edits of a completed resource (PUT) and clears the buffer. */
 export const useReplaceResource = (id: string) => {
   const sync = useSyncResource()
-  const discard = useEditBuffer((s) => s.discard)
+  const discard = useEditBuffer((state) => state.discard)
   return useMutation({
     mutationFn: (body: Parameters<typeof api.replaceResource>[1]) =>
       api.replaceResource(id, body),

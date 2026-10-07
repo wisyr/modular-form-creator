@@ -8,7 +8,7 @@ import { useEditBuffer } from '../features/resources/editBuffer'
  */
 export const AppLayout = () => {
   const hasUnsavedEdits = useEditBuffer(
-    (s) => Object.keys(s.buffers).length > 0,
+    (state) => Object.keys(state.buffers).length > 0,
   )
 
   useEffect(() => {
