@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom'
 import { getErrorMessage, isApiError } from '../api/ApiError'
 import { Button } from '../design-system'
-import { Banner, Row } from './ui'
+import {
+  Banner,
+  LeadText,
+  Row,
+} from './ui'
 
 export function LoadingState({ label = 'Loading…' }: { label?: string }) {
   return (
@@ -22,9 +26,9 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
     isApiError(error) && (error.status === 404 || error.status === 400)
   return (
     <Banner $tone="error" role="alert">
-      <p style={{ marginTop: 0 }}>
+      <LeadText>
         {notFound ? 'This resource could not be found.' : getErrorMessage(error)}
-      </p>
+      </LeadText>
       <Row>
         {notFound ? (
           <Link to="/resources">Back to resources</Link>

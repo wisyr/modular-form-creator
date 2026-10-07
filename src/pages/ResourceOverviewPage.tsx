@@ -6,12 +6,14 @@ import { LinkButton } from '../components/LinkButton'
 import { StatusBadge } from '../components/StatusBadge'
 import {
   Banner,
+  LeadText,
   Muted,
   Page,
   PageHeader,
   Row,
   Stack,
   Subtitle,
+  TightStack,
   Title,
 } from '../components/ui'
 import { Badge, Button, Card } from '../design-system'
@@ -66,13 +68,13 @@ function Overview({ resource }: { resource: Resource }) {
   return (
     <>
       <PageHeader>
-        <Stack style={{ gap: 4 }}>
+        <TightStack>
           <Title>{resource.name}</Title>
           <Subtitle>
             Resource #{resource.resourceId} ·{' '}
             {completedModuleCount(resource)} of 2 modules complete
           </Subtitle>
-        </Stack>
+        </TightStack>
         <Row>
           <StatusBadge status={resource.status} />
           <LinkButton to={`/resources/${id}/details`}>View details</LinkButton>
@@ -81,10 +83,10 @@ function Overview({ resource }: { resource: Resource }) {
 
       {buffer ? (
         <Banner $tone="warning" role="status">
-          <p style={{ marginTop: 0 }}>
+          <LeadText>
             You have unsaved changes. They exist only in this browser tab and
             will be lost if you refresh or close it.
-          </p>
+          </LeadText>
           <Row>
             <Button
               type="button"
@@ -186,7 +188,7 @@ function ModuleCard({
   return (
     <Card variant="outline">
       <PageHeader>
-        <Stack style={{ gap: 4 }}>
+        <TightStack>
           <Row>
             <strong>{title}</strong>
             <Badge variant={done ? 'success' : 'neutral'}>
@@ -195,7 +197,7 @@ function ModuleCard({
             {unsaved ? <Badge variant="warning">Unsaved changes</Badge> : null}
           </Row>
           {lockedReason ? <Muted>{lockedReason}</Muted> : null}
-        </Stack>
+        </TightStack>
         {lockedReason ? (
           <Button type="button" variant="secondary" state="locked">
             {actionLabel}

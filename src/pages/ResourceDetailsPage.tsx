@@ -7,6 +7,7 @@ import {
   DefinitionList,
   Page,
   PageHeader,
+  SectionTitle,
   Subtitle,
   Title,
 } from '../components/ui'
@@ -61,10 +62,10 @@ function Details({ resource: savedResource }: { resource: Resource }) {
       ) : null}
 
       <Card variant="outline">
-        <h2 style={{ marginTop: 0 }}>
+        <SectionTitle>
           Basic Info{' '}
           {buffer?.basicInfo ? <Badge variant="warning">Unsaved changes</Badge> : null}
-        </h2>
+        </SectionTitle>
         <DefinitionList>
           <dt>Resource name</dt>
           <dd>{orDash(basicInfo.resourceName)}</dd>
@@ -80,12 +81,12 @@ function Details({ resource: savedResource }: { resource: Resource }) {
       </Card>
 
       <Card variant="outline">
-        <h2 style={{ marginTop: 0 }}>
+        <SectionTitle>
           Project Details{' '}
           {buffer?.projectDetails ? (
             <Badge variant="warning">Unsaved changes</Badge>
           ) : null}
-        </h2>
+        </SectionTitle>
         <DefinitionList>
           <dt>Project name</dt>
           <dd>{orDash(projectDetails.projectName)}</dd>

@@ -8,7 +8,20 @@ import type { ListResourcesParams, Resource, ResourceStatus, SortOrder } from '.
 import { ErrorState, LoadingState } from '../components/PageState'
 import { DangerButton, LinkButton } from '../components/LinkButton'
 import { StatusBadge } from '../components/StatusBadge'
-import { Actions, Banner, Muted, Page, PageHeader, Row, Stack, Subtitle, Title } from '../components/ui'
+import {
+  Actions,
+  Banner,
+  FlushText,
+  Muted,
+  Page,
+  PageHeader,
+  Row,
+  SpreadRow,
+  Stack,
+  Subtitle,
+  TightStack,
+  Title,
+} from '../components/ui'
 import { SelectField } from '../components/SelectField'
 import { Button, Card, Drawer, Input } from '../design-system'
 import {
@@ -84,10 +97,10 @@ export function ResourcesPage() {
   return (
     <Page>
       <PageHeader>
-        <Stack style={{ gap: 4 }}>
+        <TightStack>
           <Title>Resources</Title>
           <Subtitle>Create resources and track their module progress.</Subtitle>
-        </Stack>
+        </TightStack>
         <Button type="button" onClick={() => setCreateOpen(true)}>
           Create resource
         </Button>
@@ -141,7 +154,7 @@ export function ResourcesPage() {
       ))}
 
       {pagination && pagination.totalPages > 1 ? (
-        <Row style={{ justifyContent: 'space-between' }}>
+        <SpreadRow>
           <Button
             type="button"
             variant="secondary"
@@ -162,7 +175,7 @@ export function ResourcesPage() {
           >
             Next
           </Button>
-        </Row>
+        </SpreadRow>
       ) : null}
 
       <Drawer
@@ -197,7 +210,7 @@ function ResourceRow({
   return (
     <Card variant="outline">
       <PageHeader>
-        <Stack style={{ gap: 4 }}>
+        <TightStack>
           <Row>
             <Link to={`/resources/${id}`}>
               <strong>{resource.name}</strong>
@@ -208,7 +221,7 @@ function ResourceRow({
             #{id} · {completedModuleCount(resource)} of 2 modules complete ·
             created {new Date(resource.createdAt).toLocaleDateString()}
           </Muted>
-        </Stack>
+        </TightStack>
         <Actions>
           <LinkButton $variant="primary" to={`/resources/${id}`}>
             Open
@@ -276,9 +289,9 @@ function DeleteConfirm({
   const remove = useDeleteResource()
   return (
     <Stack>
-      <p style={{ margin: 0 }}>
+      <FlushText>
         Delete <strong>{resource.name}</strong>? This cannot be undone.
-      </p>
+      </FlushText>
       {remove.isError ? (
         <Banner $tone="error" role="alert">
           {getErrorMessage(remove.error)}

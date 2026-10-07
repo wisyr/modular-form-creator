@@ -48,6 +48,31 @@ export const Stack = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
 `
 
+/** Stack with tight spacing, for title + subtitle groups. */
+export const TightStack = styled(Stack)`
+  gap: ${({ theme }) => theme.spacing.xs};
+`
+
+/** Row that pushes its children to opposite ends. */
+export const SpreadRow = styled(Row)`
+  justify-content: space-between;
+`
+
+/** Paragraph that sits flush against the top of its container. */
+export const LeadText = styled.p`
+  margin: 0 0 ${({ theme }) => theme.spacing.md};
+`
+
+/** Paragraph without any outer margin. */
+export const FlushText = styled.p`
+  margin: 0;
+`
+
+/** Card section heading without the default top margin. */
+export const SectionTitle = styled.h2`
+  margin-top: 0;
+`
+
 export const Banner = styled.div<{ $tone?: 'warning' | 'error' | 'info' }>`
   padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
   border-radius: ${({ theme }) => theme.radii.sm};
