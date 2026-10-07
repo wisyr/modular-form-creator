@@ -82,8 +82,13 @@ src/
   app/router.tsx       routes
   components/          layout primitives, status badge, loading/error states
   features/resources/  rules, Zod schemas, query hooks, edit buffer, module forms
-  pages/               one component per route
-  tests/               shared fixtures, render helper, test setup (tests themselves live in a tests/ folder next to the code they cover)
+  pages/<Page>/        one folder per route:
+                         <Page>.tsx             the page component only
+                         <Page>.components.tsx  helper components
+                         <Page>.hooks.ts / .constants.ts  when needed
+                         <Page>.tests.tsx       component tests
+  tests/               shared fixtures, render helper, test setup
+                       (feature tests live in features/resources/tests/*.tests.ts)
 scripts/               OpenAPI export script
 openapi/               exported backend spec (committed)
 ```
@@ -118,8 +123,8 @@ openapi/               exported backend spec (committed)
 ## Tests
 
 `npm test` runs unit tests for the business rules, validation schemas and edit
-buffer, and component tests (API mocked) for the overview, Details and both
-module forms. They cover: Project Details locked until Basic Info is complete,
+buffer, and component tests (API mocked) for the list, overview, Details and both
+module forms. Test files are named `*.tests.ts(x)`. They cover: Project Details locked until Basic Info is complete,
 provisioning disabled until both modules are complete, completed-resource edits
 never triggering `PATCH`, a single full `PUT` on submit, and the resource name
 staying locked.

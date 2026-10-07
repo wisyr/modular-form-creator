@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { Page, Subtitle, Title } from '../components/ui'
+import { Page, Subtitle, Title } from '../../components/ui'
 
-export function NotFoundPage() {
+export const NotFoundPage = () => {
   return (
     <Page>
       <Title>Page not found</Title>

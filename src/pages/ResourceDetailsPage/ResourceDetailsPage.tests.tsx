@@ -4,7 +4,7 @@ import * as api from '../../api/resources'
 import { useEditBuffer } from '../../features/resources/editBuffer'
 import { completeBasicInfo, makeCompletedResource } from '../../tests/fixtures'
 import { renderRoute } from '../../tests/renderWithProviders'
-import { ResourceDetailsPage } from '../ResourceDetailsPage'
+import { ResourceDetailsPage } from './ResourceDetailsPage'
 
 vi.mock('../../api/resources')
 

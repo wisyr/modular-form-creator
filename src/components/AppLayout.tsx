@@ -6,7 +6,7 @@ import { useEditBuffer } from '../features/resources/editBuffer'
  * Root layout. Warns before a refresh/close while any completed resource has
  * unsaved buffered edits (the buffer is intentionally lost in that case).
  */
-export function AppLayout() {
+export const AppLayout = () => {
   const hasUnsavedEdits = useEditBuffer(
     (s) => Object.keys(s.buffers).length > 0,
   )

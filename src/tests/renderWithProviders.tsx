@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components'
 import { theme } from '../design-system/theme/theme'
 
 /** Renders `element` at `path` (matched by `route`) with query, router and theme providers. */
-export function renderRoute(element: ReactElement, route: string, path: string) {
+export const renderRoute = (element: ReactElement, route: string, path: string) => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   })

@@ -1,11 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
-import { ErrorState, LoadingState } from '../components/PageState'
-import { Banner, Page, PageHeader, Title } from '../components/ui'
-import { ProjectDetailsForm } from '../features/resources/ProjectDetailsForm'
-import { useResource } from '../features/resources/queries'
-import { canEditProjectDetails } from '../features/resources/rules'
+import { ErrorState, LoadingState } from '../../components/PageState'
+import { Banner, Page, PageHeader, Title } from '../../components/ui'
+import { ProjectDetailsForm } from '../../features/resources/ProjectDetailsForm'
+import { useResource } from '../../features/resources/queries'
+import { canEditProjectDetails } from '../../features/resources/rules'
 
-export function ProjectDetailsPage() {
+export const ProjectDetailsPage = () => {
   const { resourceId = '' } = useParams()
   const { data: resource, error, isPending, refetch } = useResource(resourceId)
 

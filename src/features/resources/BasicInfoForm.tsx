@@ -29,7 +29,7 @@ const PRIORITY_OPTIONS = [
  * Completed resource: submit only stores the edit in the local buffer;
  * nothing is sent until the user submits from the overview page.
  */
-export function BasicInfoForm({ resource }: { resource: Resource }) {
+export const BasicInfoForm = ({ resource }: { resource: Resource }) => {
   const id = String(resource.resourceId)
   const navigate = useNavigate()
   const completed = isCompleted(resource)

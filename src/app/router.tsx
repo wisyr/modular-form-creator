@@ -1,11 +1,11 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from '../components/AppLayout'
-import { BasicInfoPage } from '../pages/BasicInfoPage'
-import { NotFoundPage } from '../pages/NotFoundPage'
-import { ProjectDetailsPage } from '../pages/ProjectDetailsPage'
-import { ResourceDetailsPage } from '../pages/ResourceDetailsPage'
-import { ResourceOverviewPage } from '../pages/ResourceOverviewPage'
-import { ResourcesPage } from '../pages/ResourcesPage'
+import { BasicInfoPage } from '../pages/BasicInfoPage/BasicInfoPage'
+import { NotFoundPage } from '../pages/NotFoundPage/NotFoundPage'
+import { ProjectDetailsPage } from '../pages/ProjectDetailsPage/ProjectDetailsPage'
+import { ResourceDetailsPage } from '../pages/ResourceDetailsPage/ResourceDetailsPage'
+import { ResourceOverviewPage } from '../pages/ResourceOverviewPage/ResourceOverviewPage'
+import { ResourcesPage } from '../pages/ResourcesPage/ResourcesPage'
 
 export const router = createBrowserRouter([
   {

@@ -26,7 +26,7 @@ const CATEGORY_OPTIONS = [
 ]
 
 /** Same draft/completed split as BasicInfoForm (PATCH vs. local buffer). */
-export function ProjectDetailsForm({ resource }: { resource: Resource }) {
+export const ProjectDetailsForm = ({ resource }: { resource: Resource }) => {
   const id = String(resource.resourceId)
   const navigate = useNavigate()
   const completed = isCompleted(resource)

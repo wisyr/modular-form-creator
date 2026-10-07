@@ -1,41 +1,23 @@
-import { Link, useParams } from 'react-router-dom'
-import type { Resource } from '../api/types'
-import { ErrorState, LoadingState } from '../components/PageState'
-import { StatusBadge } from '../components/StatusBadge'
+import type { Resource } from '../../api/types'
+import { StatusBadge } from '../../components/StatusBadge'
 import {
   Banner,
   DefinitionList,
-  Page,
   PageHeader,
   SectionTitle,
   Subtitle,
   Title,
-} from '../components/ui'
-import { Badge, Card } from '../design-system'
+} from '../../components/ui'
+import { Badge, Card } from '../../design-system'
 import {
   useEffectiveResource,
   useResourceBuffer,
-} from '../features/resources/editBuffer'
-import { useResource } from '../features/resources/queries'
-import { completedModuleCount } from '../features/resources/rules'
+} from '../../features/resources/editBuffer'
+import { completedModuleCount } from '../../features/resources/rules'
 
 const orDash = (value: string) => value || '—'
 
-export function ResourceDetailsPage() {
-  const { resourceId = '' } = useParams()
-  const { data: resource, error, isPending, refetch } = useResource(resourceId)
-
-  return (
-    <Page>
-      <Link to={`/resources/${resourceId}`}>← Back to overview</Link>
-      {isPending ? <LoadingState /> : null}
-      {error ? <ErrorState error={error} onRetry={() => void refetch()} /> : null}
-      {resource ? <Details resource={resource} /> : null}
-    </Page>
-  )
-}
-
-function Details({ resource: savedResource }: { resource: Resource }) {
+export const Details = ({ resource: savedResource }: { resource: Resource }) => {
   // Show what the user is about to save: server data plus buffered edits.
   const resource = useEffectiveResource(savedResource)
   const buffer = useResourceBuffer(String(savedResource.resourceId))

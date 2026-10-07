@@ -7,7 +7,7 @@ import {
   Row,
 } from './ui'
 
-export function LoadingState({ label = 'Loading…' }: { label?: string }) {
+export const LoadingState = ({ label = 'Loading…' }: { label?: string }) => {
   return (
     <Banner role="status" aria-live="polite">
       {label}
@@ -21,7 +21,7 @@ interface ErrorStateProps {
 }
 
 /** 404 / invalid-id get a "back to list" link; other errors offer a retry. */
-export function ErrorState({ error, onRetry }: ErrorStateProps) {
+export const ErrorState = ({ error, onRetry }: ErrorStateProps) => {
   const notFound =
     isApiError(error) && (error.status === 404 || error.status === 400)
   return (

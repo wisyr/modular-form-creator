@@ -10,7 +10,7 @@ import {
   makeCompletedResource,
   makeResource,
 } from '../../tests/fixtures'
-import { ResourceOverviewPage } from '../ResourceOverviewPage'
+import { ResourceOverviewPage } from './ResourceOverviewPage'
 
 vi.mock('../../api/resources')
 

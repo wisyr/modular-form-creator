@@ -1,28 +1,24 @@
-import { Link, useParams } from 'react-router-dom'
-import { getErrorMessage } from '../api/ApiError'
-import type { Resource } from '../api/types'
-import { ErrorState, LoadingState } from '../components/PageState'
-import { LinkButton } from '../components/LinkButton'
-import { StatusBadge } from '../components/StatusBadge'
+import { getErrorMessage } from '../../api/ApiError'
+import type { Resource } from '../../api/types'
+import { LinkButton } from '../../components/LinkButton'
+import { StatusBadge } from '../../components/StatusBadge'
 import {
   Banner,
   LeadText,
   Muted,
-  Page,
   PageHeader,
   Row,
   Stack,
   Subtitle,
   TightStack,
   Title,
-} from '../components/ui'
-import { Badge, Button, Card } from '../design-system'
-import { useEditBuffer } from '../features/resources/editBuffer'
+} from '../../components/ui'
+import { Badge, Button, Card } from '../../design-system'
+import { useEditBuffer } from '../../features/resources/editBuffer'
 import {
   useProvisionResource,
   useReplaceResource,
-  useResource,
-} from '../features/resources/queries'
+} from '../../features/resources/queries'
 import {
   canEditProjectDetails,
   canProvision,
@@ -30,23 +26,9 @@ import {
   isBasicInfoComplete,
   isCompleted,
   isProjectDetailsComplete,
-} from '../features/resources/rules'
+} from '../../features/resources/rules'
 
-export function ResourceOverviewPage() {
-  const { resourceId = '' } = useParams()
-  const { data: resource, error, isPending, refetch } = useResource(resourceId)
-
-  return (
-    <Page>
-      <Link to="/resources">← All resources</Link>
-      {isPending ? <LoadingState /> : null}
-      {error ? <ErrorState error={error} onRetry={() => void refetch()} /> : null}
-      {resource ? <Overview resource={resource} /> : null}
-    </Page>
-  )
-}
-
-function Overview({ resource }: { resource: Resource }) {
+export const Overview = ({ resource }: { resource: Resource }) => {
   const id = String(resource.resourceId)
   const completed = isCompleted(resource)
   const buffer = useEditBuffer((s) => s.buffers[id])
@@ -177,14 +159,14 @@ interface ModuleCardProps {
   lockedReason?: string
 }
 
-function ModuleCard({
+export const ModuleCard = ({
   title,
   done,
   unsaved,
   to,
   actionLabel,
   lockedReason,
-}: ModuleCardProps) {
+}: ModuleCardProps) => {
   return (
     <Card variant="outline">
       <PageHeader>
