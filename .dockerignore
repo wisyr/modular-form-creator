@@ -1,0 +1,14 @@
+node_modules
+dist
+storybook-static
+.git
+.idea
+.vscode
+backend
+*.log
+.env
+.env.*
+!.env.example
+playwright-report
+test-results
+blob-report

@@ -1,0 +1,666 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Modular Form Creator App API",
+    "version": "1.0.0",
+    "description": "API for managing resources and modules."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Resources",
+      "description": "Business APIs for resource lifecycle: create, edit modules, provision to completed, and replace full data."
+    },
+    {
+      "name": "Admin",
+      "description": "Administrative API for environment reset operations."
+    }
+  ],
+  "components": {
+    "schemas": {
+      "ResourceStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "completed"
+        ]
+      },
+      "BasicInfo": {
+        "type": "object",
+        "properties": {
+          "resourceName": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      },
+      "ProjectDetails": {
+        "type": "object",
+        "properties": {
+          "projectName": {
+            "type": "string"
+          },
+          "budget": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Resource": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResourceStatus"
+          },
+          "basicInfo": {
+            "$ref": "#/components/schemas/BasicInfo"
+          },
+          "projectDetails": {
+            "$ref": "#/components/schemas/ProjectDetails"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "ResourceListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Resource"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "number",
+                "example": 1
+              },
+              "pageSize": {
+                "type": "number",
+                "example": 10
+              },
+              "totalItems": {
+                "type": "number",
+                "example": 24
+              },
+              "totalPages": {
+                "type": "number",
+                "example": 3
+              }
+            }
+          }
+        }
+      },
+      "CreateResourceInput": {
+        "type": "object",
+        "required": [
+          "resourceName"
+        ],
+        "properties": {
+          "resourceName": {
+            "type": "string",
+            "example": "Example resource"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Resource not found"
+          },
+          "details": {}
+        }
+      },
+      "ProvisioningResponse": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Resource"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Resource is already completed"
+              },
+              "resource": {
+                "$ref": "#/components/schemas/Resource"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/api/resources": {
+      "get": {
+        "summary": "Get all resources",
+        "description": "Returns resources using backend-driven filtering, sorting, and pagination.\n\nSupported query params:\n- `page` (default `1`)\n- `pageSize` (default `10`, max `100`)\n- `status` (`draft` or `completed`)\n- `name` (case-insensitive partial name match)\n- `sortOrder` (`desc` newest first, `asc` oldest first)\n",
+        "tags": [
+          "Resources"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "completed"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string",
+              "example": "onboarding"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "example": "desc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resources loaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameter value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new resource",
+        "description": "Creates a new resource in `draft` status.\n\nBusiness defaults on create:\n- `status = draft`\n- `resourceId` is auto-incremented\n- `basicInfo` and `projectDetails` are initialized with empty defaults\n- `resourceName` becomes immutable after creation\n",
+        "tags": [
+          "Resources"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateResourceInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error (for example missing resourceName)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resources/{id}": {
+      "get": {
+        "summary": "Get a resource by id",
+        "description": "Loads one resource using either:\n- numeric resourceId (for example `1`), or\n- Mongo ObjectId.\n\nReturns 400 for invalid id format and 404 when the resource does not exist.\n",
+        "tags": [
+          "Resources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource loaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace full resource data while preserving current status",
+        "description": "Replaces resource business fields in one request:\n- `name`\n- `basicInfo`\n- `projectDetails`\n\nBusiness rule:\n- allowed only when resource status is `completed`.\n- drafts cannot be replaced using this endpoint.\n- `name` and `basicInfo.resourceName` are immutable after create.\n- status is preserved and cannot be changed by this endpoint.\n- status transitions are handled only by `PATCH /api/resources/{id}/provisioning`.\n",
+        "tags": [
+          "Resources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Resource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resource replaced successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format or draft resources cannot be replaced with PUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a resource",
+        "description": "Permanently deletes a resource by numeric resourceId or Mongo ObjectId.",
+        "tags": [
+          "Resources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resources/{id}/basic-info": {
+      "patch": {
+        "summary": "Update basic info module (draft resources only)",
+        "description": "Updates the Basic Info module only when resource status is `draft`.\n\nBusiness rule:\n- `resourceName` is immutable and cannot be changed after create.\n- Completed resources cannot be updated via module PATCH endpoints.\n- To edit completed resources, update in frontend memory and persist with `PUT /api/resources/{id}`.\n",
+        "tags": [
+          "Resources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasicInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Basic Info updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format or completed-resource module PATCH is not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resources/{id}/project-details": {
+      "patch": {
+        "summary": "Update project details module (draft resources only)",
+        "description": "Updates the Project Details module only when resource status is `draft`.\n\nBusiness rule:\n- Basic Info must be completed first.\n- Completed resources cannot be updated via module PATCH endpoints.\n- To edit completed resources, update in frontend memory and persist with `PUT /api/resources/{id}`.\n",
+        "tags": [
+          "Resources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectDetails"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project Details updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format, Basic Info not completed, or completed-resource module PATCH is not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resources/{id}/provisioning": {
+      "patch": {
+        "summary": "Mark resource as completed",
+        "description": "The only endpoint that can change status.\n\nBusiness rule:\n- Allowed only when current status is `draft`.\n- Basic Info and Project Details must both be complete before provisioning.\n- `draft -> completed` is allowed.\n- completed resources cannot be reprovisioned.\n",
+        "tags": [
+          "Resources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provisioning result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format, completed resource reprovisioning, or incomplete modules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/database": {
+      "delete": {
+        "summary": "Clear all application data",
+        "description": "Development/administration endpoint that deletes all resources from the database.\n\nUse for local reset scenarios only.\n",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Database cleared successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

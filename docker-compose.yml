@@ -17,6 +17,18 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+  frontend:
+    build:
+      context: .
+      args:
+        # Called by the browser, so it must be reachable from the host machine.
+        VITE_API_URL: "http://localhost:5001"
+    container_name: modular-form-creator-frontend
+    ports:
+      # 5173 is the origin the backend allows via CORS_ORIGIN.
+      - "5173:80"
+    depends_on:
+      - backend
 
 volumes:
   mongo_data:
