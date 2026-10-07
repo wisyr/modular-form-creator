@@ -83,7 +83,7 @@ src/
   components/          layout primitives, status badge, loading/error states
   features/resources/  rules, Zod schemas, query hooks, edit buffer, module forms
   pages/               one component per route
-  test/                fixtures, render helper, test setup
+  test/                shared fixtures, render helper, test setup (tests themselves live in a tests/ folder next to the code they cover)
 scripts/               OpenAPI export script
 openapi/               exported backend spec (committed)
 ```

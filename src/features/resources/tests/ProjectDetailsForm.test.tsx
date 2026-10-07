@@ -1,16 +1,16 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as api from '../../api/resources'
+import * as api from '../../../api/resources'
 import {
   completeProjectDetails,
   makeCompletedResource,
-} from '../../test/fixtures'
-import { renderRoute } from '../../test/renderWithProviders'
-import { useEditBuffer } from './editBuffer'
-import { ProjectDetailsForm } from './ProjectDetailsForm'
+} from '../../../test/fixtures'
+import { renderRoute } from '../../../test/renderWithProviders'
+import { useEditBuffer } from '../editBuffer'
+import { ProjectDetailsForm } from '../ProjectDetailsForm'
 
-vi.mock('../../api/resources')
+vi.mock('../../../api/resources')
 
 describe('ProjectDetailsForm', () => {
   beforeEach(() => {

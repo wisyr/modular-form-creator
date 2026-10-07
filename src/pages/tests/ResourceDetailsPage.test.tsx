@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as api from '../api/resources'
-import { useEditBuffer } from '../features/resources/editBuffer'
-import { completeBasicInfo, makeCompletedResource } from '../test/fixtures'
-import { renderRoute } from '../test/renderWithProviders'
-import { ResourceDetailsPage } from './ResourceDetailsPage'
+import * as api from '../../api/resources'
+import { useEditBuffer } from '../../features/resources/editBuffer'
+import { completeBasicInfo, makeCompletedResource } from '../../test/fixtures'
+import { renderRoute } from '../../test/renderWithProviders'
+import { ResourceDetailsPage } from '../ResourceDetailsPage'
 
-vi.mock('../api/resources')
+vi.mock('../../api/resources')
 
 const renderDetails = () =>
   renderRoute(

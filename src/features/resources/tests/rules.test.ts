@@ -6,14 +6,14 @@ import {
   emptyProjectDetails,
   makeCompletedResource,
   makeResource,
-} from '../../test/fixtures'
+} from '../../../test/fixtures'
 import {
   canEditProjectDetails,
   canProvision,
   completedModuleCount,
   isBasicInfoComplete,
   isProjectDetailsComplete,
-} from './rules'
+} from '../rules'
 
 describe('module completeness', () => {
   it('treats a fully filled Basic Info as complete', () => {

@@ -1,18 +1,18 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as api from '../api/resources'
-import { useEditBuffer } from '../features/resources/editBuffer'
-import { renderRoute } from '../test/renderWithProviders'
+import * as api from '../../api/resources'
+import { useEditBuffer } from '../../features/resources/editBuffer'
+import { renderRoute } from '../../test/renderWithProviders'
 import {
   completeBasicInfo,
   completeProjectDetails,
   makeCompletedResource,
   makeResource,
-} from '../test/fixtures'
-import { ResourceOverviewPage } from './ResourceOverviewPage'
+} from '../../test/fixtures'
+import { ResourceOverviewPage } from '../ResourceOverviewPage'
 
-vi.mock('../api/resources')
+vi.mock('../../api/resources')
 
 const renderOverview = () =>
   renderRoute(<ResourceOverviewPage />, '/resources/:resourceId', '/resources/2')
@@ -115,7 +115,7 @@ describe('ResourceOverviewPage', () => {
   })
 
   it('shows a not-found message when the resource does not exist', async () => {
-    const { ApiError } = await vi.importActual<typeof import('../api/ApiError')>(
+    const { ApiError } = await vi.importActual<typeof import('../../api/ApiError')>(
       '../api/ApiError',
     )
     vi.mocked(api.getResource).mockRejectedValue(

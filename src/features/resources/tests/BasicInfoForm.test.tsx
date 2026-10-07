@@ -1,17 +1,17 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as api from '../../api/resources'
+import * as api from '../../../api/resources'
 import {
   completeBasicInfo,
   makeCompletedResource,
   makeResource,
-} from '../../test/fixtures'
-import { renderRoute } from '../../test/renderWithProviders'
-import { BasicInfoForm } from './BasicInfoForm'
-import { useEditBuffer } from './editBuffer'
+} from '../../../test/fixtures'
+import { renderRoute } from '../../../test/renderWithProviders'
+import { BasicInfoForm } from '../BasicInfoForm'
+import { useEditBuffer } from '../editBuffer'
 
-vi.mock('../../api/resources')
+vi.mock('../../../api/resources')
 
 const renderForm = (resource: ReturnType<typeof makeResource>) =>
   renderRoute(

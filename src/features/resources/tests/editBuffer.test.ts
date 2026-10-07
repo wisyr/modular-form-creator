@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { completeBasicInfo, completeProjectDetails } from '../../test/fixtures'
-import { useEditBuffer } from './editBuffer'
+import { completeBasicInfo, completeProjectDetails } from '../../../test/fixtures'
+import { useEditBuffer } from '../editBuffer'
 
 describe('edit buffer', () => {
   beforeEach(() => {

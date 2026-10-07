@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { completeBasicInfo, completeProjectDetails } from '../../test/fixtures'
+import { completeBasicInfo, completeProjectDetails } from '../../../test/fixtures'
 import {
   basicInfoSchema,
   projectDetailsSchema,
   resourceNameSchema,
-} from './schemas'
+} from '../schemas'
 
 const messages = (result: { success: boolean; error?: { issues: { message: string }[] } }) =>
   result.error?.issues.map((issue) => issue.message) ?? []
