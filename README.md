@@ -175,6 +175,10 @@ lint, type-check + build, unit tests, then the Playwright test against
 
 ## Known limits
 
+- `npm audit` reports vulnerabilities (17 at the last install) that have not
+  been triaged yet. Dependency versions follow the starter template, so an
+  audit and upgrade pass (reviewing each advisory rather than running
+  `npm audit fix --force`) is worth doing before production use.
 - The production bundle is a single ~511 kB chunk (Vite warns above 500 kB).
   Route-level code splitting would remove the warning.
 - The Docker frontend is a production build; there is no hot reload inside the
